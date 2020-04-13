@@ -1,0 +1,45 @@
+---
+- name: Ensure existense of /usr/local/bin/victoria-metrics-{{ victoriametrics_version }}
+  file:
+    path: /usr/local/bin/victoria-metrics-{{ victoriametrics_version }}
+    state: directory
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    mode: 0755
+
+- name: Ensure existense of /etc/systemd/system/victoriametrics-vminsert.service.d
+  file:
+    path: /etc/systemd/system/victoriametrics-vminsert.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy overwrite.conf under /etc/systemd/system/victoriametrics-vminsert.service.d/overwrite.conf
+  copy:
+    src: overwrite.conf
+    dest: /etc/systemd/system/victoriametrics-vminsert.service.d/overwrite.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Download victoriametrics cluster version from {{ victoriametrics_download_url }}
+  unarchive:
+    src: "{{ victoriametrics_download_url }}"
+    dest: "/usr/local/bin/victoria-metrics-{{ victoriametrics_version }}"
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    remote_src: True
+  when:
+    - not ansible_check_mode
+    - victoriametrics_vminsert_is_installed.stat.exists == False or
+      victoriametrics_version not in victoriametrics_vminsert_current_version.stdout
+
+- name: Create a symbolic link
+  file:
+    src: "/usr/local/bin/victoria-metrics-{{ victoriametrics_version }}"
+    dest: "/usr/local/bin/victoriametrics"
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    state: link
+  notify: Restart victoriametrics-vminsert service  

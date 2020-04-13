@@ -1,0 +1,53 @@
+---
+- name: Ensure existense of /usr/local/bin/victoria-metrics-{{ victoriametrics_version }}
+  file:
+    path: /usr/local/bin/victoria-metrics-{{ victoriametrics_version }}
+    state: directory
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    mode: 0755
+
+- name: Ensure existense of /etc/systemd/system/victoriametrics-vmselect.service.d
+  file:
+    path: /etc/systemd/system/victoriametrics-vmselect.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy overwrite.conf under /etc/systemd/system/victoriametrics-vmselect.d/overwrite.conf
+  copy:
+    src: overwrite.conf
+    dest: /etc/systemd/system/victoriametrics-vmselect.service.d/overwrite.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Ensure existense of {{ victoriametrics_vmselect_cache_dir }}
+  file:
+    path: "{{ victoriametrics_vmselect_cache_dir }}"
+    state: directory
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    mode: 0755
+
+- name: Download victoriametrics cluster version from {{ victoriametrics_download_url }}
+  unarchive:
+    src: "{{ victoriametrics_download_url }}"
+    dest: "/usr/local/bin/victoria-metrics-{{ victoriametrics_version }}"
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    remote_src: True
+  when:
+    - not ansible_check_mode
+    - victoriametrics_vmselect_is_installed.stat.exists == False or
+      victoriametrics_version not in victoriametrics_vmselect_current_version.stdout
+
+- name: Create a symbolic link
+  file:
+    src: "/usr/local/bin/victoria-metrics-{{ victoriametrics_version }}"
+    dest: "/usr/local/bin/victoriametrics"
+    owner: "{{ victoriametrics_system_user }}"
+    group: "{{ victoriametrics_system_group }}"
+    state: link
+  notify: Restart victoriametrics-vmselect service

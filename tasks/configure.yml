@@ -1,0 +1,36 @@
+---
+- name: Create systemd unit file for vminsert nodes
+  template:
+    src: victoriametrics-vminsert.service.j2
+    dest: /etc/systemd/system/victoriametrics-vminsert.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart victoriametrics-vminsert service
+  when: inventory_hostname in groups['vminsert']
+  tags:
+    - install_vminsert
+
+- name: Create systemd unit file for vmselect nodes
+  template:
+    src: victoriametrics-vmselect.service.j2
+    dest: /etc/systemd/system/victoriametrics-vmselect.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart victoriametrics-vmselect service
+  when: inventory_hostname in groups['vmselect']
+  tags:
+    - install_vmselect
+
+- name: Create systemd unit file for vmstorage nodes
+  template:
+    src: victoriametrics-storage.service.j2
+    dest: /etc/systemd/system/victoriametrics-storage.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart victoriametrics-storage service
+  when: inventory_hostname in groups['vmstorage']
+  tags:
+    - install_vmstorage

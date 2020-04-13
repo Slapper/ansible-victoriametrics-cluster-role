@@ -1,0 +1,49 @@
+---
+# tasks file for VictoriaMetrics
+- include_tasks: preinstall.yml
+  args:
+    apply:
+      tags:
+        - install_vmselect
+        - install_vmstorage
+        - install_vminsert
+  tags:
+    - install_vmselect
+    - install_vmstorage
+    - install_vminsert
+
+- name: Start deploy and configure vmselect nodes
+  include_tasks: install_vmselect.yml
+  args:
+    apply:
+      tags:
+        - install_vmselect
+  tags:
+    - install_vmselect
+  when: inventory_hostname in groups['vmselect']
+
+- name: Start deploy and configure vminsert nodes
+  include_tasks: install_vminsert.yml
+  args:
+    apply:
+      tags:
+        - install_vminsert
+  tags:
+    - install_vminsert
+  when: inventory_hostname in groups['vminsert']
+
+- name: Start deploy and configure vmstorage nodes
+  include_tasks: install_vmstorage.yml
+  args:
+    apply:
+      tags:
+        - install_vmstorage
+  tags:
+    - install_vmstorage
+  when: inventory_hostname in groups['vmstorage']
+
+- include_tasks: configure.yml
+  tags:
+    - install_vmstorage
+    - install_vminsert
+    - install_vmselect

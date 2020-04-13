@@ -1,0 +1,27 @@
+[Unit]
+Description=VictoriaMetrics-storage
+After=network.target
+
+[Service]
+Type=simple
+User=victoria
+Group=victoria
+StartLimitBurst=5
+StartLimitInterval=0
+Restart=on-failure
+RestartSec=1
+ExecStart=/usr/local/bin/victoriametrics/vmstorage-prod {% if victoriametrics_vmstorage_service_args is defined %}{{ victoriametrics_vmstorage_service_args }}{% endif %} -memory.allowedPercent={{ victoriametrics_vmstorage_memory_allowed_percent }} -storageDataPath={{ victoriametrics_vmstorage_data_dir }} -retentionPeriod={{ victoriametrics_vmstorage_retention_period }}
+
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+{% if victoriametrics_systemd_version | int >= 232 %}
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=yes
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
