@@ -86,11 +86,36 @@ victoriametrics_vminsert_memory_allowed_percent: "60"
 
 - Need to use Ansible `serial` function in order to update one node at a time. More info : https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html#rolling-update-batch-size
 
+- Also using pre_tasks to gather facts for the the nodes in vmstorage,vmselect,vminsert groups to update j2 templates.
+
 ```
 ---
-- hosts: vmstorage,vminsert,vmselect
-  become: yes
+- hosts: vmstorage,vmselect,vminsert
+  gather_facts: false
+  become: true
   serial: 1
+
+  pre_tasks:
+    - name: Gather facts for vmstorage nodes
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      when: hostvars[item]['ansible_default_ipv4'] is not defined
+      loop: "{{ groups['vmstorage'] }}"
+
+    - name: Gather facts for vmselect nodes
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      when: hostvars[item]['ansible_default_ipv4'] is not defined
+      loop: "{{ groups['vmselect'] }}"
+
+    - name: Gather facts for vminsert nodes
+      setup:
+      delegate_to: "{{ item }}"
+      delegate_facts: True
+      when: hostvars[item]['ansible_default_ipv4'] is not defined
+      loop: "{{ groups['vminsert'] }}"
 
   roles:
    - ansible-vicotriametrics-cluster-role
