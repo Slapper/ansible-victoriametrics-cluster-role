@@ -1,14 +1,17 @@
 galaxy_info:
-  author: miltsatsakis@gmail.com
+  author: m3iltsatsakis@gmail.com
   description: Role for installing VictoriaMetrics Cluster
   company: --
   license: BSD
   min_ansible_version: 2.4
   galaxy_tags: []
   platforms:
-  - name: Centos
+  - name: EL
     versions:
     - 7
     - 8
+  galaxy_tags:
+    - victoriametrics
+    - prometheus
 dependencies: []
 

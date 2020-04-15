@@ -11,7 +11,7 @@
     - install_vmselect
     - install_vmstorage
     - install_vminsert
-
+    
 - name: Start deploy and configure vmselect nodes
   include_tasks: install_vmselect.yml
   args:
