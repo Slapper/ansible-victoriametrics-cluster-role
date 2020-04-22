@@ -95,6 +95,9 @@ victoriametrics_vminsert_memory_allowed_percent: "60"
   become: true
   serial: 1
 
+  vars:
+    - victoriametrics_version: "v1.34.9"
+
   pre_tasks:
     - name: Gather facts for vmstorage nodes
       setup:

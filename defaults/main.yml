@@ -2,7 +2,7 @@
 # defaults settings for all VictoriaMetrics nodes
 victoriametrics_repo_url: "https://github.com/VictoriaMetrics/VictoriaMetrics"
 victoriametrics_download_url: "{{ victoriametrics_repo_url }}/releases/download/{{ victoriametrics_version }}/victoria-metrics-{{ victoriametrics_version }}-cluster.tar.gz"
-victoriametrics_version: "v1.34.6"
+victoriametrics_version: "v1.34.9"
 victoriametrics_system_user: "victoria"
 victoriametrics_system_group: "victoria"
 
