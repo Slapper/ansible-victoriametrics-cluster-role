@@ -90,38 +90,21 @@ victoriametrics_vminsert_memory_allowed_percent: "60"
 
 ```
 ---
-- hosts: vmstorage,vmselect,vminsert
+- hosts: vminsert,vmselect,vmstorage
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Gather facts for victoria nodes
+      setup:
+
+- hosts: vminsert,vmselect,vmstorage
   gather_facts: false
   become: true
   serial: 1
 
   vars:
-    - victoriametrics_version: "v1.34.9"
-
-  pre_tasks:
-    - name: Gather facts for vmstorage nodes
-      setup:
-      delegate_to: "{{ item }}"
-      delegate_facts: True
-      when: hostvars[item]['ansible_default_ipv4'] is not defined
-      loop: "{{ groups['vmstorage'] }}"
-
-    - name: Gather facts for vmselect nodes
-      setup:
-      delegate_to: "{{ item }}"
-      delegate_facts: True
-      when: hostvars[item]['ansible_default_ipv4'] is not defined
-      loop: "{{ groups['vmselect'] }}"
-
-    - name: Gather facts for vminsert nodes
-      setup:
-      delegate_to: "{{ item }}"
-      delegate_facts: True
-      when: hostvars[item]['ansible_default_ipv4'] is not defined
-      loop: "{{ groups['vminsert'] }}"
-
-  roles:
-   - ansible-vicotriametrics-cluster-role
+    - victoriametrics_version: "v1.40.0"
 ```
 
 ## Extras 
