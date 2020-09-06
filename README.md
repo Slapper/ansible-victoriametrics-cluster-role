@@ -86,7 +86,7 @@ victoriametrics_vminsert_memory_allowed_percent: "60"
 
 - Need to use Ansible `serial` function in order to update one node at a time. More info : https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html#rolling-update-batch-size
 
-- Also using pre_tasks to gather facts for the the nodes in vmstorage,vmselect,vminsert groups to update j2 templates.
+- Also using we are using a simple task before running the actual update to gather facts from the nodes, see below. 
 
 ```
 ---
