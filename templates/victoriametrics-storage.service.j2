@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=victoria
-Group=victoria
+User={{ victoriametrics_system_user }}
+Group={{ victoriametrics_system_group }}
 StartLimitBurst=5
 StartLimitInterval=0
 Restart=on-failure
