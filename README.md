@@ -62,6 +62,11 @@ victoriametrics_vmselect_service_args: "" # Add extra variables here . Found mor
 ## variables for vminsert nodes
 victoriametrics_vminsert_service_args: "" # Add extra variables here . Found more options with vminsert-prod --help
 victoriametrics_vminsert_memory_allowed_percent: "60"
+
+# variables for service's listen address
+victoriametrics_vmstorage_listen_address: "{{ ansible_default_ipv4.address }}"
+victoriametrics_vmselect_listen_address: "{{ ansible_default_ipv4.address }}"
+victoriametrics_vminsert_listen_address: "{{ ansible_default_ipv4.address }}"
 ```
 
 
