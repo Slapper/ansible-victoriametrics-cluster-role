@@ -21,7 +21,12 @@ victoriametrics_vmselect_memory_allowed_percent: "60"
 victoriametrics_vminsert_service_args: ""
 victoriametrics_vminsert_memory_allowed_percent: "60"
 
-#sysctl settings. more info : 
+# variables for service's listen address
+victoriametrics_vmstorage_listen_address: "{{ ansible_default_ipv4.address }}"
+victoriametrics_vmselect_listen_address: "{{ ansible_default_ipv4.address }}"
+victoriametrics_vminsert_listen_address: "{{ ansible_default_ipv4.address }}"
+
+#sysctl settings. more info :
 custom_sysctl:
 # http://www.nateware.com/linux-network-tuning-for-2013.html
 # Increase Linux autotuning TCP buffer limits
